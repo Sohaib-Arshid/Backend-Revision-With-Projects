@@ -1,0 +1,23 @@
+{
+  "name": "backend-revision",
+  "version": "1.0.0",
+  "description": "starting project and revision",
+  "homepage": "https://github.com/Sohaib-Arshid/Backend#readme",
+  "bugs": {
+    "url": "https://github.com/Sohaib-Arshid/Backend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sohaib-Arshid/Backend.git"
+  },
+  "license": "ISC",
+  "author": "Sohaib Arshid",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon src/index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.13"
+  }
+}
