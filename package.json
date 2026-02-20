@@ -18,6 +18,7 @@
     "test": "nodemon src/index.js"
   },
   "devDependencies": {
-    "nodemon": "^3.1.13"
+    "nodemon": "^3.1.13",
+    "prettier": "^3.8.1"
   }
 }
