@@ -48,13 +48,18 @@ const login = asyncHandler(async (req, res) => {
     }
 
     return res.status(200)
-        .cookie("accessToken", accessToken, options)
-        .cookie("refresToken", refresToken, options).json(
+        .cookie("accessToken", accessToken, cookieOption)
+        .cookie("refresToken", refresToken, cookieOption)
+        .json(
             new ApiResponse(200, {
                 user: loggedInUser, accessToken, refresToken
             },
                 "User logged in successfully"
             )
         )
+})
+
+const logout = asyncHandler(async (req , res ) =>{
+    
 })
 export { login }
