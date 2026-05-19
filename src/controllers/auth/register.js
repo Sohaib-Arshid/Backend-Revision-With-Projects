@@ -1,8 +1,8 @@
-import { asyncHandler } from "../utils/asyncHandler.js"
-import { ApiError } from "../utils/ApiError.js"
-import { ApiResponse } from "../utils/ApiResponse.js"
-import { User } from "../models/user.models.js"
-import { uploadOnCloudinary } from "../utils/cloudinary.js"
+import { asyncHandler } from "../../utils/asyncHandler.js"
+import { ApiError } from "../../utils/ApiError.js"
+import { ApiResponse } from "../../utils/ApiResponse.js"
+import { User } from "../../models/user.models.js"
+import { uploadOnCloudinary } from "../../utils/cloudinary.js"
 
 const register = asyncHandler(async (req, res) => {
     const { fullname, email, password, username } = req.body;
@@ -26,7 +26,7 @@ const register = asyncHandler(async (req, res) => {
     let coverImagePath;
 
     if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
-        coverImage = await req.files.coverImage[0]?.path
+        coverImagePath = req.files.coverImage[0]?.path
     }
 
     const avatar = await uploadOnCloudinary(avatarLocalPath);
