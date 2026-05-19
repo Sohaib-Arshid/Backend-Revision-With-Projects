@@ -7,9 +7,9 @@ const genrateAccessAndRefreshToken = async (userId) => {
     try {
         const user = await User.findById(userId)
         const accessToken = user.generateAccessToken()
-        const refresToken = user.generateRefreshToken()
+        const refreshToken = user.generateRefreshToken()
 
-        user.refresToken = refresToken;
+        user.refreshToken = refreshToken
         user.save({ validateBeforeSave: false })
         return { refresToken, accessToken }
     } catch (error) {
@@ -20,7 +20,7 @@ const genrateAccessAndRefreshToken = async (userId) => {
 const login = asyncHandler(async (req, res) => {
     const { username, email, password } = req.body;
 
-    if (!username || !email) {
+    if (!(username || email)) {
         throw new ApiError(400, "Username or email is required")
     }
 
@@ -32,7 +32,7 @@ const login = asyncHandler(async (req, res) => {
         throw new ApiError(404, "User does not found!")
     }
 
-    const passwordCheak = await findUser.passwordcorrect(password);
+    const passwordCheck = await user.isPasswordCorrect(password);
 
     if (!passwordCheak) {
         throw new ApiError(401, "Password is not correct!")
@@ -46,6 +46,8 @@ const login = asyncHandler(async (req, res) => {
         httpOnly: true,
         secure: true
     }
+
+    console.log("BODY:", req.body)
 
     return res.status(200)
         .cookie("accessToken", accessToken, cookieOption)
@@ -61,13 +63,11 @@ const login = asyncHandler(async (req, res) => {
 
 const logout = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
-        user._id, {
-        $set: {
-            accessToken: undefined
-        }
-    }, {
-        new: true
-    }
+        req.user._id,
+        {
+            $unset: { refreshToken: 1 }
+        },
+        { new: true }
     )
 
     const cookieOption = {
@@ -75,11 +75,10 @@ const logout = asyncHandler(async (req, res) => {
         secure: true
     }
 
-    return res.status(200)
-        .clearCookie("accessToken", accessToken, cookieOption)
-        .clearCookie("refresToken", refresToken, cookieOption)
-        .json(
-            new ApiResponse(200, "User logged out successfully")
-        )
+    return res
+        .status(200)
+        .clearCookie("accessToken", cookieOption)
+        .clearCookie("refreshToken", cookieOption)
+        .json(new ApiResponse(200, {}, "User logged out successfully"))
 })
 export { login, logout }
