@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { User } from "../models/user.models.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
+import jwt from "jsonwebtoken"
 
 // ==================== TOKEN GENERATION ====================
 
@@ -143,6 +144,17 @@ const logout = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "User logged out successfully"))
 })
 
+const refreshToken = asyncHandler(async (req , res)=>{
+    const incomingRefreshToken = await req.cookie.refreshToken || req.body.refreshToken
+
+    if(!incomingRefreshToken){
+        throw new ApiError(401 , "unauthrized request")
+    }
+
+    const decodedToken = jwt.verify(incomingRefreshToken , process.env.REFRESH_TOKEN_SECRET)
+
+    User.findById(decodedToken._id)
+})
 // ==================== EXPORTS ====================
 
 export { register, login, logout }
