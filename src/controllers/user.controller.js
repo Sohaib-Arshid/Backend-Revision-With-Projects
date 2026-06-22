@@ -287,7 +287,7 @@ const getUserChannalProfile = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Username is messing")
     }
 
-    const channal = User.aggregate([
+    const channal = await User.aggregate([
         {
             $match: {
                 username: username?.toLowerCase()
@@ -295,27 +295,27 @@ const getUserChannalProfile = asyncHandler(async (req, res) => {
         },
         {
             $lookup: {
-                from: "Subscription",
-                localFeild: "_id",
-                foreignFeild: "channal",
+                from: "Subscriptions",
+                localField: "_id",
+                foreignField: "channal",
                 as: "subscriber"
             }
         },
         {
             $lookup: {
-                from: "Subscription",
-                localFeild: "_id",
+                from: "Subscriptions",
+                localField: "_id",
                 foreignFeild: "subscriber",
                 as: "subscribeTo"
             }
         },
         {
-            $addFeild: {
+            $addFields: {
                 subscriberCount: {
-                    $size: "subscriber"
+                    $size: "$subscriber"
                 },
                 channalSubscribeCount: {
-                    $size: subscribeTo
+                    $size: $subscribeTo
                 },
                 isSubscribed: {
                     $cond: {
@@ -329,19 +329,31 @@ const getUserChannalProfile = asyncHandler(async (req, res) => {
             }
         },
         {
-            $project : {
-                fullName : 1,
-                username : 1,
-                subscriberCount : 1,
+            $project: {
+                fullName: 1,
+                username: 1,
+                subscriberCount: 1,
                 channalSubscribeCount: 1,
                 isSubscribed: 1,
-                avtar : 1,
-                coverImage : 1,
-                email : 1,
-                createdAt : 1
+                avatar: 1,
+                coverImage: 1,
+                email: 1,
+                createdAt: 1
             }
         }
     ])
+
+    if(!channal?.length){
+        throw new ApiError(400 , "channal does not exists")
+    }
+
+    return res.status(200).json(
+        new ApiResponse(
+            200,
+            channal[0],
+            "Channel fetched successfully"
+        )
+    )
 })
 // ==================== EXPORTS ====================
 
