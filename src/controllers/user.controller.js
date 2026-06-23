@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js"
 import { User } from "../models/user.models.js"
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import jwt from "jsonwebtoken"
+import mongoose from "mongoose"
 
 // ==================== TOKEN GENERATION ====================
 
@@ -343,8 +344,8 @@ const getUserChannalProfile = asyncHandler(async (req, res) => {
         }
     ])
 
-    if(!channal?.length){
-        throw new ApiError(400 , "channal does not exists")
+    if (!channal?.length) {
+        throw new ApiError(400, "channal does not exists")
     }
 
     return res.status(200).json(
@@ -355,10 +356,53 @@ const getUserChannalProfile = asyncHandler(async (req, res) => {
         )
     )
 })
+
+const getWatchHistory = asyncHandler(async (req, res) => {
+    const user = await User.aggregate([
+        {
+            $match: {
+                _id: new mongoose.Types.ObjectId(req.user._id)
+            },
+
+            $lookup: {
+                from: "Video",
+                localField: "watchHistory",
+                foreignField: "_id",
+                as: "watchHistory",
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "owner",
+                            foreignField: "_id",
+                            as : "owner",
+                            pipeline : [
+                                {
+                                    $project : {
+                                        fullname : 1,
+                                        username : 1,
+                                        avatar : 1
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        $addFields : {
+                            $owner : {
+                                $first : $owner
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+    ])
+})
 // ==================== EXPORTS ====================
 
 export {
     register, login, logout, refreshAccessToken,
     changePassword, getCurrentUser, updateAccountDetailes, updateCoverImage,
-    getUserChannalProfile
+    getUserChannalProfile, getWatchHistory
 }
