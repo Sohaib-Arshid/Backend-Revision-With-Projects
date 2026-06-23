@@ -366,11 +366,11 @@ const getWatchHistory = asyncHandler(async (req, res) => {
         },
         {
             $lookup: {
-                from: "videos",           
-                localField: "watchHistory", 
+                from: "videos",
+                localField: "watchHistory",
                 foreignField: "_id",
-                as: "watchHistory",   
-                pipeline: [                 
+                as: "watchHistory",
+                pipeline: [
                     {
                         $lookup: {
                             from: "users",
@@ -391,7 +391,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
                     {
                         $addFields: {
                             owner: {
-                                $first: "$owner" 
+                                $first: "$owner"
                             }
                         }
                     }
@@ -410,10 +410,48 @@ const getWatchHistory = asyncHandler(async (req, res) => {
             )
         )
 })
+
+const increaseViewCount = asynchandler(async (req, res) => {
+    const { videoId } = req.params
+
+    if (!videoId) {
+        throw new ApiError(400, "video is not available")
+    }
+
+    const user = req.user;
+
+    if (!user) {
+        throw new ApiError(400, "user is not available")
+    }
+
+    const checkVideo = user.watchHistory.includes(mongoose.Types.ObjectId(videoId))
+
+    if (checkVideo) {
+        return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200, null , "video watched successfully"
+            )
+        )
+    } else {
+        const increasedView = await Video.findByIdAndUpdate(videoId , {$inc : {views : 1}},{new : true})
+
+        const watchHistoryadd = await User.findByIdAndUpdate(user._id , {$push : {watchHistory : videoId}},{new : true})
+    }
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200, increasedView, "view updated successfully"
+            )
+        )
+})
 // ==================== EXPORTS ====================
 
 export {
     register, login, logout, refreshAccessToken,
     changePassword, getCurrentUser, updateAccountDetailes, updateCoverImage,
-    getUserChannalProfile, getWatchHistory
+    getUserChannalProfile, getWatchHistory, increaseViewCount
 }
