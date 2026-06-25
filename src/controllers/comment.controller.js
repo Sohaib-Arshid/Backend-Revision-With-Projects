@@ -68,10 +68,18 @@ const commentsfetch = asyncHandler(async (req, res) => {
         throw new ApiError(401, "unauthorized")
     }
 
-    const { page = 1, limit = 10 } = req.query;
-    const skip = (parseInt(page) - 1) * parseInt(limit);
-    
-    const comment = await Comment.aggregate([
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    if (page < 1) {
+        throw new ApiError(400, "invalid page number")
+    }
+
+    if (limit < 1) {
+        throw new ApiError(400, "invalid limit")
+    }
+
+    const comments = await Comment.aggregate([
         {
             $match: {
                 video: new mongoose.Types.ObjectId(videoId)
@@ -107,9 +115,10 @@ const commentsfetch = asyncHandler(async (req, res) => {
             }
         },
         { $skip: skip },
-        { $limit: parseInt(limit) },
+        { $limit: limit},
         {
             $project: {
+                _id: 1,
                 content: 1,
                 createdAt: 1,
                 owner: 1
@@ -123,10 +132,12 @@ const commentsfetch = asyncHandler(async (req, res) => {
         .json(
             new ApiResponse(
                 200,
-                comments,
-                totalComments,
-                totalPages: Math.ceil(totalComments / limit),
-                currentPage: parseInt(page),
+                {
+                    comments,
+                    totalComments,
+                    totalPages: Math.ceil(totalComments / limit),
+                    currentPage: parseInt(page),
+                },
                 "comments fetched successfully"
             )
         )
