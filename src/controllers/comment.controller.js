@@ -182,12 +182,54 @@ const updateComment = asyncHandler(async (req, res) => {
             new ApiResponse(
                 200,
                 {
-                    updateComment
+                    updatedComment
                 },
-                "comments update successfully"
+                "comment update successfully"
             )
         )
 
 })
 
-export { createComment, commentsfetch, updateComment }
+const deleteComment = asyncHandler(async (req, res) => {
+    const { commentId } = req.params;
+
+    if (!commentId) {
+        throw new ApiError(400, "comment Id is not available")
+    }
+
+    const comment = await Comment.findById(commentId);
+
+    if (!comment) {
+        throw new ApiError(404, "comment not found")
+    }
+
+    const user = req.user
+
+    if (!user) {
+        throw new ApiError(401, "unauthorized")
+    }
+
+    if (comment.owner.toString() !== req.user._id.toString()) {
+        throw new ApiError(403, "You can only delete your own comments")
+    }
+
+    const deletedComment = await Comment.findByIdAndDelete(comment._id)
+    const commentCount = await Comment.countDocuments({ video: comment.video })
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                {
+                    deletedComment,
+                    deleted: true,
+                    commentCount
+                },
+                "Comment deleted successfully"
+            )
+        )
+
+})
+
+export { createComment, commentsfetch, updateComment, deleteComment }
