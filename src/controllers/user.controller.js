@@ -412,7 +412,7 @@ const getWatchHistory = asyncHandler(async (req, res) => {
         )
 })
 
-const increaseViewCount = asynchandler(async (req, res) => {
+const increaseViewCount = asyncHandler(async (req, res) => {
     const { videoId } = req.params
 
     if (!videoId) {
@@ -516,6 +516,10 @@ const likefeature = asyncHandler(async (req, res) => {
             )
     }
 
+})
+
+const comment = asyncHandler(async (req , res )=>{
+    
 })
 // ==================== EXPORTS ====================
 
