@@ -493,10 +493,10 @@ const likefeature = asyncHandler(async (req, res) => {
         const likeCount = await Like.countDocuments({video : videoId})
 
         return res
-            .status(200)
+            .status(201)
             .json(
                 new ApiResponse(
-                    200, {like : createLike,  liked: true, likeCount }, "video liked successfully"
+                    201, {like : createLike,  liked: true, likeCount }, "video liked successfully"
                 )
             )
     } else {
