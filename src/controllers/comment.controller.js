@@ -26,7 +26,7 @@ const createComment = asyncHandler(async (req, res) => {
         throw new ApiError(401, "unauthorized")
     }
 
-    const {content} = req.body
+    const { content } = req.body
     if (!content || content === "") {
         throw new ApiError(400, "contant is not available")
     }
@@ -36,8 +36,8 @@ const createComment = asyncHandler(async (req, res) => {
         content: content.trim()
     })
 
-    const commentCount  = await Comment.countDocuments({
-        video : videoId
+    const commentCount = await Comment.countDocuments({
+        video: videoId
     })
 
     return res
@@ -48,3 +48,89 @@ const createComment = asyncHandler(async (req, res) => {
             )
         )
 })
+
+const commentsfetch = asyncHandler(async (req, res) => {
+    const { videoId } = req.params;
+
+    if (!videoId) {
+        throw new ApiError(400, "video Id is not available")
+    }
+
+    const video = await Video.findById(videoId);
+
+    if (!video) {
+        throw new ApiError(404, "video not found")
+    }
+
+    const user = req.user
+
+    if (!user) {
+        throw new ApiError(401, "unauthorized")
+    }
+
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    
+    const comment = await Comment.aggregate([
+        {
+            $match: {
+                video: new mongoose.Types.ObjectId(videoId)
+            }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [
+                    {
+                        $project: {
+                            fullname: 1,
+                            username: 1,
+                            avatar: 1
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $addFields: {
+                owner: {
+                    $first: "$owner"
+                }
+            }
+        },
+        {
+            $sort: {
+                createdAt: -1
+            }
+        },
+        { $skip: skip },
+        { $limit: parseInt(limit) },
+        {
+            $project: {
+                content: 1,
+                createdAt: 1,
+                owner: 1
+            }
+        }
+    ])
+    const totalComments = await Comment.countDocuments({ video: videoId });
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                comments,
+                totalComments,
+                totalPages: Math.ceil(totalComments / limit),
+                currentPage: parseInt(page),
+                "comments fetched successfully"
+            )
+        )
+
+})
+
+export { createComment, commentsfetch }
