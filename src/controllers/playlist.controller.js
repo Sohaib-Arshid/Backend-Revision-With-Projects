@@ -254,9 +254,99 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
         );
 });
 
+const deletePlaylist = asyncHandler(async (req, res) => {
+    const { playlistId } = req.params;
+
+    if (!playlistId) {
+        throw new ApiError(400, "Playlist ID is required");
+    }
+
+    const playlist = await Playlist.findById(playlistId);
+
+    if (!playlist) {
+        throw new ApiError(404, "Playlist not found");
+    }
+
+    const user = req.user;
+
+    if (!user) {
+        throw new ApiError(401, "Unauthorized access");
+    }
+
+    if (playlist.owner.toString() !== req.user._id.toString()) {
+        throw new ApiError(403, "You can only delete your own playlists");
+    }
+
+    await Playlist.findByIdAndDelete(playlistId);
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                { deleted: true, playlistId },
+                "Playlist deleted successfully"
+            )
+        );
+});
+
+const updatePlaylist = asyncHandler(async (req, res) => {
+    const { playlistId } = req.params;
+
+    if (!playlistId) {
+        throw new ApiError(400, "Playlist ID is required");
+    }
+
+    const playlist = await Playlist.findById(playlistId);
+
+    if (!playlist) {
+        throw new ApiError(404, "Playlist not found");
+    }
+
+    const user = req.user;
+
+    if (!user) {
+        throw new ApiError(401, "Unauthorized access");
+    }
+
+    if (playlist.owner.toString() !== req.user._id.toString()) {
+        throw new ApiError(403, "You can only update your own playlists");
+    }
+
+    const { name, description, isPublic } = req.body;
+
+    if (!name && !description && isPublic === undefined) {
+        throw new ApiError(400, "At least one field is required to update");
+    }
+
+    const updatedPlaylist = await Playlist.findByIdAndUpdate(
+        playlistId,
+        {
+            $set: {
+                ...(name && { name: name.trim() }),
+                ...(description && { description: description.trim() }),
+                ...(isPublic !== undefined && { isPublic })
+            }
+        },
+        { new: true }
+    );
+
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                updatedPlaylist,
+                "Playlist updated successfully"
+            )
+        );
+});
+
 export { 
     createPlaylist, 
     getPlaylist, 
     addVideoToPlaylist, 
-    removeVideoFromPlaylist  
+    removeVideoFromPlaylist,
+    deletePlaylist,
+    updatePlaylist
 };
