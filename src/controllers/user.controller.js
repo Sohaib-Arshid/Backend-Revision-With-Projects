@@ -528,5 +528,5 @@ const comment = asyncHandler(async (req , res )=>{
 export {
     register, login, logout, refreshAccessToken,
     changePassword, getCurrentUser, updateAccountDetailes, updateCoverImage,
-    getUserChannalProfile, getWatchHistory, increaseViewCount , likefeature
+    getUserChannalProfile, getWatchHistory, increaseViewCount , likefeature , updateUserAvatar
 }
