@@ -1,8 +1,9 @@
-import express from "express";
+import { Router } from "express";  // ✅ Consistent import
 import { dashboardStats } from "../controllers/dashboard.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
-const router = express.Router();
+const router = Router();
+
 router.route("/stats").get(verifyJWT, dashboardStats);
 
 export default router;

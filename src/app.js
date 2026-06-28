@@ -5,34 +5,31 @@ import cookieParser from "cookie-parser";
 const app = express();
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: process.env.CORS_ORIGIN || "http://localhost:3000",
     credentials: true
 }));
-
 app.use(express.json({ limit: "20kb" }));
-app.use(express.urlencoded({
-    extended: true,
-    limit: "20kb"
-}));
+app.use(express.urlencoded({ extended: true, limit: "20kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
-// Routes
 import userRouter from "./routes/user.routes.js";
-import commentRouter from "./routes/comment.routes.js";
 import playlistRouter from "./routes/playlist.routes.js";
-import likeRouter from "./routes/like.routes.js";
-import subscriptionRouter from "./routes/subscription.routes.js";
 import dashboardRouter from "./routes/dashboard.routes.js";
-import videoRouter from "./routes/video.routes.js";
 
-// Route Middlewares
-app.use("/api/v1/users", userRouter);
-app.use("/api/v1/comments", commentRouter);
+app.use("/api/v1/users", userRouter); 
 app.use("/api/v1/playlists", playlistRouter);
-app.use("/api/v1/likes", likeRouter);
-app.use("/api/v1/subscriptions", subscriptionRouter);
 app.use("/api/v1/dashboard", dashboardRouter);
-app.use("/api/v1/videos", videoRouter);
+
+app.get("/api/v1/health", (req, res) => {
+    res.status(200).json({ status: "OK", message: "Server is running" });
+});
+
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        message: "Route not found"
+    });
+});
 
 export { app };

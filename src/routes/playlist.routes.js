@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
-
 import {
     createPlaylist,
     getPlaylist,
@@ -13,27 +12,21 @@ import {
 const router = Router();
 
 // Create Playlist
-router.route("/")
-    .post(verifyJWT, createPlaylist);
+router.route("/").post(verifyJWT, createPlaylist);
 
 // Get Single Playlist
-router.route("/:playlistId")
-    .get(verifyJWT, getPlaylist);
+router.route("/:playlistId").get(verifyJWT, getPlaylist);
 
 // Update Playlist
-router.route("/:playlistId")
-    .patch(verifyJWT, updatePlaylist);
+router.route("/:playlistId").patch(verifyJWT, updatePlaylist);
 
 // Delete Playlist
-router.route("/:playlistId")
-    .delete(verifyJWT, deletePlaylist);
+router.route("/:playlistId").delete(verifyJWT, deletePlaylist);
 
 // Add Video To Playlist
-router.route("/:playlistId/video/:videoId")
-    .patch(verifyJWT, addVideoToPlaylist);
+router.route("/:playlistId/video/:videoId").patch(verifyJWT, addVideoToPlaylist);
 
 // Remove Video From Playlist
-router.route("/:playlistId/video/:videoId")
-    .delete(verifyJWT, removeVideoFromPlaylist);
+router.route("/:playlistId/video/:videoId").delete(verifyJWT, removeVideoFromPlaylist);
 
 export default router;
