@@ -142,4 +142,165 @@ const getVideoById = asyncHandler(async (req, res) => {
 
 })
 
-export { uploadVideo, getVideoById }
+const getAllVideos = asyncHandler(async (req, res) => {
+    const { page = 1, limit = 10, sortBy = "createdAt", sortType = "desc", query } = req.query;
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const sortOrder = sortType === "asc" ? 1 : -1;
+    const sortStage = { [sortBy]: sortOrder };
+
+    const matchStage = {
+        isPublished: true,
+        ...(query && { title: { $regex: query, $options: "i" } })
+    };
+
+    const videos = await Video.aggregate([
+        { $match: matchStage },
+        { $sort: sortStage },
+        { $skip: skip },
+        { $limit: parseInt(limit) },
+        {
+            $lookup: {
+                from: "users",
+                localField: "owner",
+                foreignField: "_id",
+                as: "owner",
+                pipeline: [{ $project: { fullname: 1, username: 1, avatar: 1 } }]
+            }
+        },
+        { $addFields: { owner: { $first: "$owner" } } },
+        { $project: { __v: 0 } }
+    ]);
+
+    const totalVideos = await Video.countDocuments(matchStage);
+
+    return res.status(200).json(
+        new ApiResponse(200, {
+            videos,
+            totalVideos,
+            totalPages: Math.ceil(totalVideos / limit),
+            currentPage: parseInt(page)
+        }, "Videos fetched successfully")
+    );
+});
+
+const getMyUploadedVideos = asyncHandler(async (req, res) => {
+    const user = req.user;
+
+    if (!user) {
+        throw new ApiError(401, "Unauthorized access");
+    }
+
+    const videos = await Video.find({ owner: user._id }).sort({ createdAt: -1 });
+
+    return res.status(200).json(
+        new ApiResponse(200, videos, "My videos fetched successfully")
+    );
+});
+
+const updateVideo = asyncHandler(async (req, res) => {
+    const { videoId } = req.params;
+    const { title, description } = req.body;
+
+    if (!videoId) {
+        throw new ApiError(400, "Video ID is required");
+    }
+
+    const video = await Video.findById(videoId);
+
+    if (!video) {
+        throw new ApiError(404, "Video not found");
+    }
+
+    const user = req.user;
+
+    if (!user || video.owner.toString() !== user._id.toString()) {
+        throw new ApiError(403, "You can only update your own videos");
+    }
+
+    const thumbnailLocalPath = req.file?.path;
+
+    let thumbnailUrl = video.thumbnail;
+
+    if (thumbnailLocalPath) {
+        const thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
+        if (thumbnail?.url) {
+            thumbnailUrl = thumbnail.url;
+        }
+    }
+
+    const updatedVideo = await Video.findByIdAndUpdate(
+        videoId,
+        {
+            $set: {
+                ...(title && { title: title.trim() }),
+                ...(description && { description: description.trim() }),
+                thumbnail: thumbnailUrl
+            }
+        },
+        { new: true }
+    );
+
+    return res.status(200).json(
+        new ApiResponse(200, updatedVideo, "Video updated successfully")
+    );
+});
+
+const deleteVideo = asyncHandler(async (req, res) => {
+    const { videoId } = req.params;
+
+    if (!videoId) {
+        throw new ApiError(400, "Video ID is required");
+    }
+
+    const video = await Video.findById(videoId);
+
+    if (!video) {
+        throw new ApiError(404, "Video not found");
+    }
+
+    const user = req.user;
+
+    if (!user || video.owner.toString() !== user._id.toString()) {
+        throw new ApiError(403, "You can only delete your own videos");
+    }
+
+    await Video.findByIdAndDelete(videoId);
+
+    return res.status(200).json(
+        new ApiResponse(200, { deleted: true, videoId }, "Video deleted successfully")
+    );
+});
+
+const togglePublishStatus = asyncHandler(async (req, res) => {
+    const { videoId } = req.params;
+
+    if (!videoId) {
+        throw new ApiError(400, "Video ID is required");
+    }
+
+    const video = await Video.findById(videoId);
+
+    if (!video) {
+        throw new ApiError(404, "Video not found");
+    }
+
+    const user = req.user;
+
+    if (!user || video.owner.toString() !== user._id.toString()) {
+        throw new ApiError(403, "You can only update your own videos");
+    }
+
+    const updatedVideo = await Video.findByIdAndUpdate(
+        videoId,
+        { $set: { isPublished: !video.isPublished } },
+        { new: true }
+    );
+
+    return res.status(200).json(
+        new ApiResponse(200, updatedVideo, "Publish status toggled successfully")
+    );
+});
+
+export { uploadVideo, getVideoById, getAllVideos, getMyUploadedVideos, updateVideo, deleteVideo, togglePublishStatus };
