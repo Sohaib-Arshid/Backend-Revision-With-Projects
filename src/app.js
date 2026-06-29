@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import videoRouter from "./routes/video.routes.js";
 
 const app = express();
 
@@ -20,6 +21,7 @@ import dashboardRouter from "./routes/dashboard.routes.js";
 app.use("/api/v1/users", userRouter); 
 app.use("/api/v1/playlists", playlistRouter);
 app.use("/api/v1/dashboard", dashboardRouter);
+app.use("/api/v1/videos", videoRouter);
 
 app.get("/api/v1/health", (req, res) => {
     res.status(200).json({ status: "OK", message: "Server is running" });
