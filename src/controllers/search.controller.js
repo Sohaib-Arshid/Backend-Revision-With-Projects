@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { ApiError } from "../utils/ApiError";
-import { asyncHandler } from "../utils/asyncHandler";
-import { Video } from "../models/video.models";
-import { ApiResponse } from "../utils/ApiResponse";
+import { ApiError } from "../utils/ApiError.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { Video } from "../models/video.models.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 const searchApi = asyncHandler(async (req, res) => {
     const { search, page = 1, limit = 10, } = req.query

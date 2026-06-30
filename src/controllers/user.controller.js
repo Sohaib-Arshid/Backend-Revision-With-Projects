@@ -149,7 +149,7 @@ const logout = asyncHandler(async (req, res) => {
 })
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
-    const incomingRefreshToken = await req.cookie.refreshToken || req.body.refreshToken
+    const incomingRefreshToken = await req.cookies.refreshToken || req.body.refreshToken
 
     if (!incomingRefreshToken) {
         throw new ApiError(401, "unauthrized request")
@@ -173,7 +173,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             secure: true
         }
 
-        const { accessToken, newRefreshToken } = await generateAccessAndRefreshToken(user._id)
+        const { accessToken, refreshToken: newRefreshToken } = await generateAccessAndRefreshToken(user._id)
 
         return res
             .status(200)
@@ -192,16 +192,20 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 })
 
 const changePassword = asyncHandler(async (req, res) => {
-    const { oldPassword, newPassword } = req.body
-    const user = await User.findById(req?.user._id)
+    const { oldPassword, newPassword } = req.body || {};
 
+    if (!oldPassword || !newPassword) {
+        throw new ApiError(400, "Old password and new password are required");
+    }
+
+    const user = await User.findById(req.user._id)
     const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
 
     if (!isPasswordCorrect) {
         throw new ApiError(400, "old password is incorrect")
     }
 
-    user.password = password;
+    user.password = newPassword;
     await user.save({ validateBeforeSave: false })
 
     return res
@@ -212,10 +216,9 @@ const changePassword = asyncHandler(async (req, res) => {
 })
 
 const getCurrentUser = asyncHandler(async (req, res) => {
-    return res
-        .status(200)
-        .json(200, req.user, "user fatched successfully")
-
+    return res.status(200).json(
+        new ApiResponse(200, req.user, "user fetched successfully")
+    )
 })
 
 const updateAccountDetailes = asyncHandler(async (req, res) => {
