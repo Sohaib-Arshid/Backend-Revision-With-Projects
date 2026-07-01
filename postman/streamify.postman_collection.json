@@ -1,0 +1,776 @@
+{
+  "info": {
+    "_postman_id": "89c32e09-fc57-4557-b414-7213bf380117",
+    "name": "streamify",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52978744",
+    "_collection_link": "https://go.postman.co/collection/52978744-89c32e09-fc57-4557-b414-7213bf380117?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "user",
+      "item": [
+        {
+          "name": "register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "fullname",
+                  "value": "sohaib khan",
+                  "type": "text",
+                  "uuid": "d20afd17-196b-4441-b9ac-e597a1551207"
+                },
+                {
+                  "key": "email",
+                  "value": "sohaibali125@gmail.com",
+                  "type": "text",
+                  "uuid": "a17fdf07-70d0-4c09-8a53-5c08b5c1d977"
+                },
+                {
+                  "key": "password",
+                  "value": "12345",
+                  "type": "text",
+                  "uuid": "0f42ea1b-1c0f-492f-a497-34346ef01e6b"
+                },
+                {
+                  "key": "username",
+                  "value": "sohaibkhan",
+                  "type": "text",
+                  "uuid": "66109846-2bf0-478f-ab46-c4886efaa553"
+                },
+                {
+                  "key": "avatar",
+                  "type": "file",
+                  "uuid": "2ee343b3-36bf-4402-84ea-c13c8ca8fa8a",
+                  "src": "/C:/Users/HP/OneDrive/Pictures/622785800_1250549116959946_552239859705693811_n.jpg"
+                },
+                {
+                  "key": "coverImage",
+                  "type": "file",
+                  "uuid": "bdd6510b-835f-4714-bf1f-94917fc2f3d9",
+                  "src": "/C:/Users/HP/OneDrive/Pictures/622785800_1250549116959946_552239859705693811_n.jpg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{server}}/users/register",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "users",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\":\"sohaibkhan\",\r\n    \"password\":\"12345\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/users/login",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "users",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "logout",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\":\"sohaibkhan\",\r\n    \"password\":\"12345\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/users/logout",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "users",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update account detail",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "refresh-token",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/users/refresh-token",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "users",
+                "refresh-token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "history",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/users/history",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "users",
+                "history"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-channel",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/users/channel/sohaibkhan",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "users",
+                "channel",
+                "sohaibkhan"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "password-change",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/users/change-password",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "users",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get current-user",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{server}}/users/current-user",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "users",
+                "current-user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update avater",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "video upload",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "cover-image-update",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "coverImage",
+                  "type": "file",
+                  "uuid": "743501a6-da5a-4bd6-a19b-6d896f76afc0",
+                  "src": "/C:/Users/HP/OneDrive/Pictures/Screenshots/Screenshot 2025-11-10 223315.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{server}}/users/cover-image-update",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "users",
+                "cover-image-update"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get channel",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/users/channel/sohaibkhan",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "users",
+                "channel",
+                "sohaibkhan"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get video by id",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "create comment",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/videos/6a43b9e7fb6b41249138e58a",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "videos",
+                "6a43b9e7fb6b41249138e58a"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update video",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "thumbnail",
+                  "type": "file",
+                  "uuid": "b7881665-edd8-442f-afdf-87922c71d122",
+                  "src": "/C:/Users/HP/OneDrive/Pictures/Screenshots/Screenshot 2026-01-14 204631.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{server}}/videos/6a43b9e7fb6b41249138e58a",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "videos",
+                "6a43b9e7fb6b41249138e58a"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "togale video",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/videos/toggle/6a43b9e7fb6b41249138e58a",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "videos",
+                "toggle",
+                "6a43b9e7fb6b41249138e58a"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete video",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/videos/6a43b9e7fb6b41249138e58a",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "videos",
+                "6a43b9e7fb6b41249138e58a"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all video",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/videos/",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "videos",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update comment",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "fetch comment",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/users/comments/6a43c118fb6b41249138e59a",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "users",
+                "comments",
+                "6a43c118fb6b41249138e59a"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "like",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "delete comment",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{server}}/users/comments/6a43e727c11aed1ecc397fc6",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "users",
+                "comments",
+                "6a43e727c11aed1ecc397fc6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create-playlist",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearer_token_1dye}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\" : \"hello\",\r\n    \"description\" : \"hi bro\",\r\n    \"isPublic\" : true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/playlists/create-playlist",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "playlists",
+                "create-playlist"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "add video in playlist",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "get playlist",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearer_token_1dye}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\" : \"hello\",\r\n    \"description\" : \"hi bro\",\r\n    \"isPublic\" : true\r\n}"
+            },
+            "url": {
+              "raw": "{{server}}/playlists/6a44a24230b17254374784ed",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "playlists",
+                "6a44a24230b17254374784ed"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "add video in playlist",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearer_token_1dye}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{server}}/playlists/6a44a24230b17254374784ed/video/6a44ac1a11682c670a019590",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "playlists",
+                "6a44a24230b17254374784ed",
+                "video",
+                "6a44ac1a11682c670a019590"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "playlist update",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "playlist and video delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearer_token_1dye}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{server}}/playlists/6a44a24230b17254374784ed",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "playlists",
+                "6a44a24230b17254374784ed"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "playlist update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearer_token_1dye}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{                                      \r\n    \"name\": \"Updated Playlist Name\",     \r\n    \"description\": \"New description\",      \r\n    \"isPublic\": false                    \r\n}  ",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{server}}/playlists/6a44c2af8c2421ba0a0e9312",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "playlists",
+                "6a44c2af8c2421ba0a0e9312"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "search API",
+          "request": {
+            "method": "GET",
+            "header": []
+          },
+          "response": []
+        },
+        {
+          "name": "Dashboard",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearer_token_1dye}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{                                      \r\n    \"name\": \"Updated Playlist Name\",     \r\n    \"description\": \"New description\",      \r\n    \"isPublic\": false                    \r\n}  "
+            },
+            "url": {
+              "raw": "{{server}}/dashboard/stats",
+              "host": [
+                "{{server}}"
+              ],
+              "path": [
+                "dashboard",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "bearer_token_1dye",
+      "secret": true
+    },
+    {
+      "key": "supabase_service_role_api_key_06tj",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_06tj",
+      "secret": true
+    },
+    {
+      "key": "auth_secret_1dye",
+      "secret": true
+    },
+    {
+      "key": "bearer_token_18ju",
+      "secret": true
+    },
+    {
+      "key": "supabase_service_role_api_key_0o73",
+      "secret": true
+    },
+    {
+      "key": "auth_secret_18ju",
+      "secret": true
+    },
+    {
+      "key": "json_web_token_0o73",
+      "secret": true
+    }
+  ]
+}
