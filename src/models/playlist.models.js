@@ -16,17 +16,18 @@ const playlistSchema = new Schema({
         trim: true,
         index: true,
     },
-    video: {
-        type: Schema.Types.ObjectId,
-        ref: "Video",
-        default : []
-    },
     isPublic : {
         type : Boolean,
         default : true,
         required : true
+    },
+    video:[
+        {
+        type: Schema.Types.ObjectId,
+        ref: "Video",
+        default : []
     }
-
+    ] 
 },
     {
         timestamps: true
